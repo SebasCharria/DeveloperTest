@@ -1,0 +1,50 @@
+﻿@page "/agreements"
+
+<DataGrid TItem="AgreementModel"
+          Responsive
+          Class="table-sm"
+          Hoverable
+          Editable
+          Narrow
+          Sortable
+          Filterable
+          Data="agreements"
+          ShowPager
+          SelectedRowStyling="@((row, style) => { style.Color = Color.Primary; })">
+    <DataGridNumericColumn TItem="AgreementModel"
+                           Field="@nameof(AgreementModel.Id)"
+                           Caption="ID"
+                           Filterable="true">
+    </DataGridNumericColumn>
+    <DataGridColumn TItem="AgreementModel"
+                    Field="@nameof(AgreementModel.Name)"
+                    Caption="Nombre"
+                    Filterable="true"></DataGridColumn>
+    <DataGridColumn TItem="AgreementModel"
+                    Field="@nameof(AgreementModel.Description)"
+                    Caption="Descripcion"
+                    Filterable="true"></DataGridColumn>
+    <DataGridNumericColumn TItem="AgreementModel"
+                           Field="@nameof(AgreementModel.Amount)"
+                           Caption="Importe"
+                           Filterable="true">
+        <DisplayTemplate>
+            @context.Amount.Value (@context.Amount.Currency)
+        </DisplayTemplate>
+    </DataGridNumericColumn>
+</DataGrid>
+
+@code {
+    private IEnumerable<AgreementModel> agreements = null;
+
+    [Inject] public IHttpClientFactory HttpClientFactory { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var client = HttpClientFactory.CreateClient("API");
+
+        agreements = await client.GetFromJsonAsync<IEnumerable<AgreementModel>>("api/agreements");
+
+        await base.OnInitializedAsync();
+    }
+}

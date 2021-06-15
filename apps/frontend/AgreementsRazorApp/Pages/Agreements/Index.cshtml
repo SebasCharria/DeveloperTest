@@ -1,0 +1,35 @@
+﻿@page
+@model AgreementsRazorApp.Pages.Agreements.IndexModel
+@{
+    ViewData["Title"] = "Agreements";
+}
+
+<table id="agreements_id" class="display">
+    <thead>
+        <tr>
+            <th>Id</th>
+            <th>Nombre</th>
+            <th>Descripción</th>
+            <th>Importe</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var agreement in Model.Agreements)
+        {
+            <tr>
+                <td>@agreement.Id</td>
+                <td>@agreement.Name</td>
+                <td>@agreement.Description</td>
+                <td>@agreement.Amount.Value (@agreement.Amount.Currency)</td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+@section Scripts {
+    <script defer>
+        $(document).ready(function () {
+            $('#agreements_id').DataTable();
+        });
+    </script>
+}
